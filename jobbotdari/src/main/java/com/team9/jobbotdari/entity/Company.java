@@ -26,7 +26,6 @@ public class Company {
     private String description;
 
     private String websiteUrl;
-    private String rssUrl;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
