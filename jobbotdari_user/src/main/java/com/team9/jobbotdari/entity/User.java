@@ -1,6 +1,6 @@
 package com.team9.jobbotdari.entity;
 
-import com.team9.jobbotdari.security.Role;
+import com.team9.jobbotdari.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,8 +23,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private String password;
