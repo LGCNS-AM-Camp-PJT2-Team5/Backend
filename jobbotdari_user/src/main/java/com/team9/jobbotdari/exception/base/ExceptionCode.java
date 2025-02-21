@@ -11,7 +11,11 @@ public enum ExceptionCode {
     NULL_POINT_ERROR(404, "G010", "NullPointerException 발생"),
 
     // @RequestBody 및 @RequestParam, @PathVariable 값이 유효하지 않음.
-    NOT_VALID_ERROR(404, "G011", "Validation Exception 발생");
+    NOT_VALID_ERROR(404, "G011", "Validation Exception 발생"),
+
+    // 회원가입 관련 오류 추가
+    DUPLICATE_USERNAME(409, "USER_001", "이미 사용 중인 아이디입니다."),
+    PASSWORD_MISMATCH(400, "USER_002", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
 
     /**
      *

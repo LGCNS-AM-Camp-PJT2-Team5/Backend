@@ -1,7 +1,6 @@
 package com.team9.jobbotdari.security;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import com.team9.jobbotdari.common.jwt.JwtUtils;

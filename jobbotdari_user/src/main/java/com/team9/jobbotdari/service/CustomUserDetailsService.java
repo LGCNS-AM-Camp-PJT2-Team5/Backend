@@ -4,7 +4,6 @@ import com.team9.jobbotdari.entity.User;
 import com.team9.jobbotdari.repository.UserRepository;
 import com.team9.jobbotdari.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
