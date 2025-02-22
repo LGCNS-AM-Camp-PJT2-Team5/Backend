@@ -1,6 +1,5 @@
 package com.team9.jobbotdari.exception.base;
 
-import com.team9.jobbotdari.exception.signup.SignupException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,20 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private final HttpStatus HTTP_STATUS_OK = HttpStatus.OK;
-
-    // 회원가입 예외 처리 - 중복 아이디
-    @ExceptionHandler(SignupException.DuplicateUsernameException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateUsernameException(SignupException.DuplicateUsernameException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getCode());
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    // 회원가입 예외 처리 - 비밀번호 불일치
-    @ExceptionHandler(SignupException.PasswordMismatchException.class)
-    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(SignupException.PasswordMismatchException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getCode());
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
 
     // 비즈니스 로직 예외 처리
     @ExceptionHandler(BusinessException.class)

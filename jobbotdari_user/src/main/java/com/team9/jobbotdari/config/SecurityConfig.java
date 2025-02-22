@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     private final String[] swaggerPath = {"/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/error"};
-    private final String[] permitPath = {"/", "/api/auth/**"};
+    private final String[] permitPath = {"/", "/api/auth/**", "/api/files/**"};
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,7 +39,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers(permitPath).permitAll() // 인증 없이 접근 가능한 경로 설정
                     .requestMatchers(swaggerPath).permitAll() // 스웨거 경로 설정
-                    //.requestMatchers("/api/**").hasAnyRole("ADMIN", "USER")
+                    // USER 전용 URL
+                    //.requestMatchers("/api/**").hasAnyRole("USER")
+                    // ADMIN 전용 URL
+                    //.requestMatchers("/admin/**").hasAnyRole("ADMIN")
                     .anyRequest().authenticated())
                 .sessionManagement(auth -> auth
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
