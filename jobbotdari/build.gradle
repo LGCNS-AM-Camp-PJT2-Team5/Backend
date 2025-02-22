@@ -36,6 +36,13 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// for RSS
+	implementation 'com.rometools:rome:2.1.0'
+
+	// for JSON Parsing
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+
 }
 
 tasks.named('test') {
