@@ -40,9 +40,9 @@ public class SecurityConfig {
                     .requestMatchers(permitPath).permitAll() // 인증 없이 접근 가능한 경로 설정
                     .requestMatchers(swaggerPath).permitAll() // 스웨거 경로 설정
                     // USER 전용 URL
-                    //.requestMatchers("/api/**").hasAnyRole("USER")
+                    .requestMatchers("/api/**").hasAnyRole("USER")
                     // ADMIN 전용 URL
-                    //.requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                    .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                     .anyRequest().authenticated())
                 .sessionManagement(auth -> auth
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

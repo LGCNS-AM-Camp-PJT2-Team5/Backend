@@ -1,12 +1,12 @@
 package com.team9.jobbotdari.security;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.team9.jobbotdari.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Getter
 public class CustomUserDetails implements UserDetails {
@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return user.getRole().toString();
+                return "ROLE_" + user.getRole().toString();
             }
         });
         return collection;
