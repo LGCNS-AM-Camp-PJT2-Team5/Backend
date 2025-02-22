@@ -15,7 +15,10 @@ public enum ExceptionCode {
 
     // 회원가입 관련 오류 추가
     DUPLICATE_USERNAME(409, "USER_001", "이미 사용 중인 아이디입니다."),
-    PASSWORD_MISMATCH(400, "USER_002", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+    PASSWORD_MISMATCH(400, "USER_002", "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+
+    // 관심기업 관련 오류 추가
+    DUPLICATE_USER_INTEREST(409, "USER_INTEREST_001", "이미 관심기업 목록에 존재합니다.");
 
     /**
      *
