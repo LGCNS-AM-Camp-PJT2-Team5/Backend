@@ -42,8 +42,8 @@ public class AdminServiceImpl implements AdminService {
 
         return logs.stream()
                 .map(log -> LogListResponseDto.builder()
-                        .userId(log.getUser().getId())
-                        .name(log.getUser().getName())
+                        .userId(log.getUser() != null ? log.getUser().getId() : null)
+                        .name(log.getUser() != null ? log.getUser().getName() : null)
                         .description(log.getDescription())
                         .action(log.getAction())
                         .createdAt(log.getCreatedAt())

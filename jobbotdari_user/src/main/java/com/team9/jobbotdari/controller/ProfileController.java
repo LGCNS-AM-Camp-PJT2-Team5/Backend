@@ -43,7 +43,7 @@ public class ProfileController {
     @PatchMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @Valid @RequestPart ProfileUpdateRequestDto requestDto,
+            @Valid @RequestPart(required = false) ProfileUpdateRequestDto requestDto,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
         profileService.updateProfile(userDetails, requestDto, file);

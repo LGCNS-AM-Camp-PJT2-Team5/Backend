@@ -51,18 +51,20 @@ public class ProfileService {
         User user = userRepository.findById(userDetails.getUser().getId())
                 .orElseThrow(UserNotFoundException::new);
 
-        // 이름 변경
-        if (requestDto.getName() != null && !requestDto.getName().isEmpty()) {
-            user.setName(requestDto.getName());
-        }
+        if(requestDto != null) {
+            // 이름 변경
+            if (requestDto.getName() != null && !requestDto.getName().isEmpty()) {
+                user.setName(requestDto.getName());
+            }
 
-        // 비밀번호 변경 (passwordConfirm 일치 여부 확인)
-        if (requestDto.getPassword() != null && !requestDto.getPassword().isEmpty()) {
-            if(requestDto.getPasswordConfirm() != null && !requestDto.getPasswordConfirm().isEmpty()) {
-                if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
-                    throw new PasswordMismatchException();
+            // 비밀번호 변경 (passwordConfirm 일치 여부 확인)
+            if (requestDto.getPassword() != null && !requestDto.getPassword().isEmpty()) {
+                if (requestDto.getPasswordConfirm() != null && !requestDto.getPasswordConfirm().isEmpty()) {
+                    if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
+                        throw new PasswordMismatchException();
+                    }
+                    user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
                 }
-                user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
             }
         }
 
