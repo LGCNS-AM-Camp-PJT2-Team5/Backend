@@ -88,9 +88,11 @@ public class NewsService {
      */
     public String generateTitlesSummaryInput(List<NewsDto> newsList) {
         StringBuilder titlesBuilder = new StringBuilder();
-//        for (int i = 0; i < news.size(); i++) {
+
         // API 토큰 갯수 제한으로 인해 뉴스 제목 5개만 반환하도록 설정
-        for (int i = 0; i < 5; i++) {
+        int loopSize = Math.min(5, newsList.size());
+
+        for (int i = 0; i < loopSize; i++) {
             // 번호와 뉴스 제목을 추가
             titlesBuilder.append(i + 1).append(". ").append(newsList.get(i).getTitle());
             // 마지막 항목이 아니라면 줄바꿈 추가

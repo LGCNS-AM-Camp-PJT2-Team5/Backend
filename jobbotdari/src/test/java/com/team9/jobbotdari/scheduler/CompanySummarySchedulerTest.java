@@ -14,6 +14,6 @@ public class CompanySummarySchedulerTest {
 
     @Test
     void testUpdateCompanySummary() {
-        companySummaryScheduler.updateCompanySummary();
+        companySummaryScheduler.updateCompanyDescriptionScheduler();
     }
 }

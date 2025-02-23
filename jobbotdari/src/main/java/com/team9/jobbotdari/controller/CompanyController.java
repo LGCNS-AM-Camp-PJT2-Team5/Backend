@@ -3,6 +3,7 @@ package com.team9.jobbotdari.controller;
 import com.team9.jobbotdari.dto.request.CompanyRequestDto;
 import com.team9.jobbotdari.dto.response.CompanyResponseDto;
 import com.team9.jobbotdari.dto.NewsDto;
+import com.team9.jobbotdari.entity.Company;
 import com.team9.jobbotdari.service.CompanyService;
 import com.team9.jobbotdari.service.NewsService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,8 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> addCompany(@RequestBody CompanyRequestDto companyRequestDto) {
-        companyService.addCompany(companyRequestDto);
+        Company createdCompany = companyService.addCompany(companyRequestDto);
+        companyService.updateCompanyDescription(createdCompany);
         return ResponseEntity.ok(Map.of("code", 200, "data", Map.of("message", "기업 추가 완료")));
     }
 }
