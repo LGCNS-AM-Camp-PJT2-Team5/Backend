@@ -35,7 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### application.yml ###
-jobbotdari/src/main/resources/application.yml
-

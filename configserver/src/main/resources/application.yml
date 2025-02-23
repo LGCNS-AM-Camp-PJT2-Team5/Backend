@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active:
+      - git
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/LGCNS-AM-Camp-PJT1-Team9/resources.git
+          search-paths:
+            - jobbotdari
+            - jobbotdari_user
+            - gateway
+            - discovery
+server:
+  port: 8071
