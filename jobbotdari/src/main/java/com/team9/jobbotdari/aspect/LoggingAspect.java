@@ -30,7 +30,8 @@ public class LoggingAspect {
 
     @Around("execution(* com.team9.jobbotdari.controller..*(..)) " +
             "|| execution(* com.team9.jobbotdari.service..*(..)) " +
-            "|| execution(* com.team9.jobbotdari.repository..*(..))")
+            "|| (execution(* com.team9.jobbotdari.repository..*(..)) " +
+            "    && !execution(* com.team9.jobbotdari.repository.LogRepository.*(..)))")
     public Object logAllLayers(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
