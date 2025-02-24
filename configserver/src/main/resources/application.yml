@@ -10,9 +10,12 @@ spring:
         git:
           uri: https://github.com/LGCNS-AM-Camp-PJT1-Team9/resources.git
           search-paths:
-            - jobbotdari
-            - jobbotdari_user
-            - gateway
             - discovery
+            - gateway
+            - jobbotdari-user
+            - jobbotdari
+          username: ${GIT_USERNAME}
+          password: ${GIT_PW}
+          default-label: main
 server:
   port: 8071
