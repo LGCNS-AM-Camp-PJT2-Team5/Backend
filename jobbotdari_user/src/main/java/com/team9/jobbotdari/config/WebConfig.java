@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 임시 로컬 주소
         registry
                 .addMapping("/**")
-                .allowedOriginPatterns("http://localhost:3000")
+                .allowedOriginPatterns("http://localhost:5173")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.HEAD.name(),
