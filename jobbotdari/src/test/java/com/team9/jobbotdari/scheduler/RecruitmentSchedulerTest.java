@@ -4,16 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-
 @SpringBootTest
-public class CompanySummarySchedulerTest {
-
+public class RecruitmentSchedulerTest {
     @Autowired
-    private CompanySummaryScheduler companySummaryScheduler;
+    private RecruitmentScheduler recruitmentScheduler;
 
     @Test
-    void testUpdateCompanyDescriptionScheduler() {
-        companySummaryScheduler.updateCompanyDescriptionScheduler();
+    void testAddRecruitmentDataScheduler() {
+        recruitmentScheduler.addRecruitmentDataScheduler();
     }
 }

@@ -1,10 +1,11 @@
 package com.team9.jobbotdari.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
-@Getter
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompanyResponseDto {
     private Long id;
     private String name;

@@ -1,19 +1,11 @@
 package com.team9.jobbotdari.scheduler;
 
-import com.team9.jobbotdari.dto.NewsDto;
-import com.team9.jobbotdari.entity.Company;
-import com.team9.jobbotdari.repository.CompanyRepository;
 import com.team9.jobbotdari.service.CompanyService;
-import com.team9.jobbotdari.service.NewsService;
-import com.team9.jobbotdari.service.NewsSummaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor

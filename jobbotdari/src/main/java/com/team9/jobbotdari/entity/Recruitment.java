@@ -23,10 +23,10 @@ public class Recruitment {
 
     private String title;
 
-    private String requirements;
+    private String requirements;    // 자격 요건 (ex. 신입, 경력)
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String description;     // 상세 정보
 
     private LocalDateTime deadline;
 

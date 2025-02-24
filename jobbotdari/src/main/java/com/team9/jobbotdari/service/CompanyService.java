@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,19 +18,22 @@ import java.util.stream.Collectors;
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final NewsService newsService;
-    private final NewsSummaryService newsSummaryService;
+    private final ApiRequestService apiRequestService;
 
+    // 컨트롤러용 메소드
     public List<CompanyResponseDto> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
         return companies.stream().map(this::mapToCompanyDto).collect(Collectors.toList());
     }
 
+    // 컨트롤러용 메소드
     public CompanyResponseDto getCompanyById(Long id) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found with id: " + id));
         return mapToCompanyDto(company);
     }
 
+    // 컨트롤러용 메소드
     public Company addCompany(CompanyRequestDto companyRequestDto) {
         Company company = Company.builder()
                 .name(companyRequestDto.getName())
@@ -49,7 +51,7 @@ public class CompanyService {
         // 뉴스 기사들의 타이틀에 번호를 붙여 하나의 문자열로 결합합니다.
         String titlesSummaryInput = newsService.generateTitlesSummaryInput(newsList);
         // 결합된 타이틀 문자열을 기반으로 뉴스 요약을 생성합니다.
-        String summary = (String) newsSummaryService.getNewsSummary(titlesSummaryInput).get("description");
+        String summary = (String) apiRequestService.getNewsSummary(titlesSummaryInput).get("description");
         // 생성된 요약을 회사의 description 필드에 업데이트합니다.
         company.setDescription(summary);
         // 업데이트된 회사를 저장합니다.
@@ -70,7 +72,7 @@ public class CompanyService {
             // 뉴스 기사들의 타이틀에 번호를 붙여 하나의 문자열로 결합합니다.
             String titlesSummaryInput = newsService.generateTitlesSummaryInput(newsList);
             // 결합된 타이틀 문자열을 기반으로 뉴스 요약을 생성합니다.
-            String summary = (String) newsSummaryService.getNewsSummary(titlesSummaryInput).get("description");
+            String summary = (String) apiRequestService.getNewsSummary(titlesSummaryInput).get("description");
             // 생성된 요약을 회사의 description 필드에 업데이트합니다.
             company.setDescription(summary);
             // 업데이트된 회사를 저장합니다.
@@ -78,13 +80,25 @@ public class CompanyService {
         }
     }
 
-    private CompanyResponseDto mapToCompanyDto(Company company) {
-        CompanyResponseDto companyResponseDto = new CompanyResponseDto();
-        companyResponseDto.setId(company.getId());
-        companyResponseDto.setName(company.getName());
-        companyResponseDto.setDescription(company.getDescription());
+    // RecruitmentService용 메소드
+    public Company getCompanyByName(String name) {
+        return companyRepository.findByName(name).orElse(null);
+    }
 
-        return companyResponseDto;
+    // RecruitmentService용 메소드 (오버로딩)
+    public Company addCompany(String companyName) {
+        Company company = Company.builder()
+                .name(companyName)
+                .build();
+        return companyRepository.save(company);
+    }
+
+    private CompanyResponseDto mapToCompanyDto(Company company) {
+        return new CompanyResponseDto(
+                company.getId(),
+                company.getName(),
+                company.getDescription()
+        );
     }
 
 }
