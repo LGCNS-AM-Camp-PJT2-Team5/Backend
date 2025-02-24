@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=news_db
+      - MYSQL_USER=springboot
+      - MYSQL_PASSWORD=p@ssw0rd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - app-network
+  config-server:
+    build:
+      context: ./configserver
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8071/actuator/health" ]
+      interval: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      - SPRING_APPLICATION_NAME=config-server
+      - SPRING_PROFILES_ACTIVE=git
+      - GIT_USERNAME=${GIT_USERNAME}
+      - GIT_PW=${GIT_PW}
+    networks:
+      - app-network
+
+  eureka-server:
+    build:
+      context: ./eurekaserver
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8070:8070"
+    environment:
+      - SPRING_APPLICATION_NAME=eureka-server
+      - SPRING_PROFILES_ACTIVE=default
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  gateway-server:
+    build:
+      context: ./gatewayserver
+      dockerfile: Dockerfile
+    container_name: gateway-server
+    ports:
+      - "8072:8072"
+    environment:
+      - SPRING_APPLICATION_NAME=gateway-server
+      - SPRING_PROFILES_ACTIVE=default
+    depends_on:
+      - eureka-server
+    networks:
+      - app-network
+
+  jobbotdari:
+    build:
+      context: ./jobbotdari
+      dockerfile: Dockerfile
+    container_name: jobbotdari
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_APPLICATION_NAME=jobbotdari
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/news_db?serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=springboot
+      - SPRING_DATASOURCE_PASSWORD=p@ssw0rd
+    depends_on:
+      - eureka-server
+      - mysql
+    networks:
+      - app-network
+
+  jobbotdari-user:
+    build:
+      context: ./jobbotdari_user
+      dockerfile: Dockerfile
+    container_name: jobbotdari-user
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_APPLICATION_NAME=jobbotdari-user
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/news_db?serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=springboot
+      - SPRING_DATASOURCE_PASSWORD=p@ssw0rd
+    depends_on:
+      - eureka-server
+      - mysql
+    networks:
+      - app-network
+    volumes:
+      - jobbotdari-user-uploads:/app/uploads
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  jobbotdari-user-uploads:
