@@ -1,5 +1,7 @@
 package com.team9.jobbotdari.service;
 
+import com.team9.jobbotdari.dto.request.AddCompanyRequestDto;
+import com.team9.jobbotdari.dto.response.BaseResponseDto;
 import com.team9.jobbotdari.dto.response.LogListResponseDto;
 import com.team9.jobbotdari.dto.response.UserListResponseDto;
 import com.team9.jobbotdari.entity.Log;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final LogRepository logRepository;
+
+    private final JobbotariFeignClient jobbotariFeignClient;
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
@@ -50,5 +54,10 @@ public class AdminServiceImpl implements AdminService {
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BaseResponseDto addCompany(AddCompanyRequestDto addCompanyRequestDto) {
+       return jobbotariFeignClient.addCompany(addCompanyRequestDto);
     }
 }

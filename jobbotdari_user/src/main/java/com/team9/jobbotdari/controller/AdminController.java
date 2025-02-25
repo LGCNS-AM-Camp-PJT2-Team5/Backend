@@ -1,5 +1,6 @@
 package com.team9.jobbotdari.controller;
 
+import com.team9.jobbotdari.dto.request.AddCompanyRequestDto;
 import com.team9.jobbotdari.dto.response.BaseResponseDto;
 import com.team9.jobbotdari.dto.response.LogListResponseDto;
 import com.team9.jobbotdari.dto.response.UserListResponseDto;
@@ -52,5 +53,11 @@ public class AdminController {
                 .data(logList)
                 .code(HTTP_STATUS_OK_CODE)
                 .build());
+    }
+
+    @PostMapping("/company")
+    @Operation(summary = "기업 추가", description = "기업을 추가합니다. (관리자만 실행 가능)")
+    public ResponseEntity<BaseResponseDto> addCompany(@RequestBody AddCompanyRequestDto addCompanyRequestDto){
+        return ResponseEntity.ok(adminService.addCompany(addCompanyRequestDto));
     }
 }
