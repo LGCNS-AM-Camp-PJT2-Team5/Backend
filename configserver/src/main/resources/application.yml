@@ -10,8 +10,8 @@ spring:
         git:
           uri: https://github.com/LGCNS-AM-Camp-PJT1-Team9/resources.git
           search-paths:
-            - discovery
-            - gateway
+            - eureka-server
+            - gateway-server
             - jobbotdari-user
             - jobbotdari
           username: ${GIT_USERNAME}

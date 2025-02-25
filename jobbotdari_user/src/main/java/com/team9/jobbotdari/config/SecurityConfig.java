@@ -32,7 +32,6 @@ public class SecurityConfig {
 
 
         http
-                .cors(Customizer.withDefaults())
                 .csrf(auth -> auth.disable())
                 .formLogin(auth -> auth.disable())
                 .logout(auth -> auth.disable())
