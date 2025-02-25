@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class RecruitmentScheduler {
     private final RecruitmentService recruitmentService;
 
-    @Scheduled(cron = "10 0 0,12 * * *")
+    @Scheduled(cron = "0 30 0,12 * * *")
     public void addRecruitmentDataScheduler() {
         recruitmentService.addRecruitment();
 
