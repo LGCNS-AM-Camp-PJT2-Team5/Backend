@@ -24,7 +24,7 @@ public class Log {
     private User user;
 
     private String action;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @CreationTimestamp

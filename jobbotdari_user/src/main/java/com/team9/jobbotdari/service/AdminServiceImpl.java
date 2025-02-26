@@ -10,6 +10,9 @@ import com.team9.jobbotdari.repository.LogRepository;
 import com.team9.jobbotdari.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +45,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<LogListResponseDto> getLogs() {
-        List<Log> logs = logRepository.findAll();
+        Pageable pageable = (Pageable) PageRequest.of(0, 10);
+        Page<Log> logPages = logRepository.findAll(pageable);
+        List<Log> logs = logPages.getContent();
 
         return logs.stream()
                 .map(log -> LogListResponseDto.builder()
