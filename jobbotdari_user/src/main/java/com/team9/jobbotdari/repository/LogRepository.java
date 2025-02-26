@@ -11,6 +11,6 @@ import java.util.List;
 public interface LogRepository extends JpaRepository<Log, Long> {
     List<Log> findByCreatedAtAfter(LocalDateTime date);
 
-    Page<Log> findAll(Pageable pageable);
+    Page<Log> findByCreatedAtAfter(LocalDateTime date, Pageable pageable);
 }
 

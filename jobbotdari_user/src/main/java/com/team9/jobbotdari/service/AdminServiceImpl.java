@@ -20,6 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
+    final int PAGE_SIZE = 30;
+
     private final UserRepository userRepository;
     private final LogRepository logRepository;
 
@@ -57,19 +62,26 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<LogListResponseDto> getLogs() {
-        Pageable pageable = (Pageable) PageRequest.of(0, 10);
-        Page<Log> logPages = logRepository.findAll(pageable);
-        List<Log> logs = logPages.getContent();
+        LocalDateTime todayStart = LocalDateTime.now().with(LocalTime.MIN);
+        List<Log> allLogs = new ArrayList<>();
+        int pageNum = 0;
+        Page<Log> logPage;
 
-        return logs.stream()
+        do {
+            Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+            logPage = logRepository.findByCreatedAtAfter(todayStart, pageable);
+            allLogs.addAll(logPage.getContent());
+            pageNum++;
+        } while (logPage.hasNext());
+
+        return allLogs.stream()
                 .map(log -> LogListResponseDto.builder()
                         .userId(log.getUser() != null ? log.getUser().getId() : null)
                         .name(log.getUser() != null ? log.getUser().getName() : null)
                         .description(log.getDescription())
                         .action(log.getAction())
                         .createdAt(log.getCreatedAt())
-                        .build()
-                )
+                        .build())
                 .collect(Collectors.toList());
     }
 
