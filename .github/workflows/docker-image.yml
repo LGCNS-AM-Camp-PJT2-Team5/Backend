@@ -22,11 +22,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and Push Docker Images
+      - name: Build and Push MySQL Image
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          # 서비스 목록
+          IMAGE_NAME="$DOCKER_HUB_USERNAME/mysql"
+          IMAGE_TAG="latest"
+          CONTEXT="./mysql"
+          DOCKERFILE="$CONTEXT/Dockerfile"
+
+          echo "Building and pushing $IMAGE_NAME:$IMAGE_TAG"
+
+          docker build --build-arg MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
+                       --build-arg MYSQL_DATABASE=$MYSQL_DATABASE \
+                       --build-arg MYSQL_USER=$MYSQL_USER \
+                       --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
+                       -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
+
+          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:${{ github.sha }}
+          docker push $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:${{ github.sha }}
+
+      - name: Build and Push Application Images
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_PW: ${{ secrets.GIT_PW }}
+        run: |
           SERVICES=("configserver" "eurekaserver" "gatewayserver" "jobbotdari" "jobbotdari_user")
 
           for SERVICE in "${SERVICES[@]}"
@@ -38,7 +64,10 @@ jobs:
 
             echo "Building and pushing $IMAGE_NAME:$IMAGE_TAG"
 
-            docker build -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
+            docker build --build-arg GIT_USERNAME=$GIT_USERNAME \
+                         --build-arg GIT_PW=$GIT_PW \
+                         -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
+
             docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:${{ github.sha }}
             docker push $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:${{ github.sha }}
