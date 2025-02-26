@@ -15,8 +15,8 @@ public class ProfileUpdateRequestDto {
     private String name;
 
     @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{5,11}$",
-            message = "비밀번호는 5~11자이며, 대소문자, 숫자, 특수문자를 포함해야 합니다."
+            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{8,}$",
+            message = "비밀번호는 8자 이상이며, 대소문자, 숫자, 특수문자를 포함해야 합니다."
     )
     private String password;
 
