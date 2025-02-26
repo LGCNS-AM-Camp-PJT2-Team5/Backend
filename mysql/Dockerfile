@@ -13,6 +13,6 @@ ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
 # 초기 SQL 스크립트 복사 (데이터베이스 초기화)
-COPY init.sql /docker-entrypoint-initdb.d/
+COPY ./init.sql /docker-entrypoint-initdb.d/
 
 EXPOSE 3306
