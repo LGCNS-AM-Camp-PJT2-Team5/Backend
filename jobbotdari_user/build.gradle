@@ -67,6 +67,8 @@ dependencies {
 
 	// Spring Test
 	testImplementation 'org.springframework:spring-test'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.4.3'
 }
 
 dependencyManagement {

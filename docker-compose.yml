@@ -2,20 +2,20 @@ version: '3.8'
 
 services:
   mysql:
-    image: jihoonyc/mysql:latest  # Docker Hub에서 가져옴
+    image: jihoonyc/mysql:latest
     container_name: mysql
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
   config-server:
     image: jihoonyc/configserver:latest
@@ -24,6 +24,14 @@ services:
       - "8071:8071"
     networks:
       - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
 
   eureka-server:
     image: jihoonyc/eurekaserver:latest
@@ -31,9 +39,15 @@ services:
     ports:
       - "8070:8070"
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8070/actuator/health"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
 
   gateway-server:
     image: jihoonyc/gatewayserver:latest
@@ -41,9 +55,15 @@ services:
     ports:
       - "8072:8072"
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8072/actuator/health"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
 
   jobbotdari:
     image: jihoonyc/jobbotdari:latest
@@ -51,10 +71,17 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - eureka-server
-      - mysql
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
 
   jobbotdari-user:
     image: jihoonyc/jobbotdari_user:latest
@@ -62,12 +89,21 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - eureka-server
-      - mysql
+      mysql:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      jobbotdari:
+        condition: service_healthy
     networks:
       - app-network
     volumes:
       - jobbotdari-user-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
   app-network:
