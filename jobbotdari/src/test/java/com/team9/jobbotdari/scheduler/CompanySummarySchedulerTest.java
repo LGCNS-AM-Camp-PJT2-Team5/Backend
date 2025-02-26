@@ -13,7 +13,7 @@ public class CompanySummarySchedulerTest {
     private CompanySummaryScheduler companySummaryScheduler;
 
     @Test
-    void testUpdateCompanyDescriptionScheduler() {
+    void testUpdateCompanyDescriptionScheduler() throws InterruptedException {
         companySummaryScheduler.updateCompanyDescriptionScheduler();
     }
 }

@@ -17,10 +17,6 @@ public class Recruitment {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
     private String title;
 
     private String requirements;    // 자격 요건 (ex. 신입, 경력)

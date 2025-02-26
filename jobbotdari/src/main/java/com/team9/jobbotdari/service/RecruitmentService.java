@@ -2,7 +2,6 @@ package com.team9.jobbotdari.service;
 
 import com.team9.jobbotdari.dto.request.RecruitmentRequestDto;
 import com.team9.jobbotdari.dto.response.RecruitmentResponseDto;
-import com.team9.jobbotdari.entity.Company;
 import com.team9.jobbotdari.entity.Recruitment;
 import com.team9.jobbotdari.repository.RecruitmentRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecruitmentService {
     private final RecruitmentRepository recruitmentRepository;
-    private final CompanyService companyService;
     private final ApiRequestService apiRequestService;
 
     // 컨트롤러용 메소드
@@ -38,14 +36,9 @@ public class RecruitmentService {
         recruitmentRepository.deleteAll();
         List<RecruitmentRequestDto> recruitmentDtos = apiRequestService.getSaraminRecruitmentsInfo();
         for (RecruitmentRequestDto recruitmentDto : recruitmentDtos) {
-            Company company = companyService.getCompanyByName(recruitmentDto.getCompanyName());
-            if (company == null) {
-                company = companyService.addCompany(recruitmentDto.getCompanyName());
-            }
 
             Recruitment recruitment = Recruitment.builder()
                     .id(recruitmentDto.getId())
-                    .company(company)
                     .title(recruitmentDto.getTitle())
                     .requirements(recruitmentDto.getRequirements())
                     .description(recruitmentDto.getDescription())
@@ -58,7 +51,6 @@ public class RecruitmentService {
     private RecruitmentResponseDto mapToRecruitmentDto(Recruitment recruitment) {
         return new RecruitmentResponseDto(
                 recruitment.getId(),
-                recruitment.getCompany().getId(),
                 recruitment.getTitle(),
                 recruitment.getRequirements(),
                 recruitment.getDescription(),

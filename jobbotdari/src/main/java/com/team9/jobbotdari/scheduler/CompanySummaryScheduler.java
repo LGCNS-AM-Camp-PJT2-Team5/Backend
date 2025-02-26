@@ -2,6 +2,7 @@ package com.team9.jobbotdari.scheduler;
 
 import com.team9.jobbotdari.service.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,13 @@ public class CompanySummaryScheduler {
      *
      * Cron 표현식 "0 0 0,12 * * *"는 매일 0시와 12시에 실행됨을 의미합니다.
      */
+    @Async
     @Scheduled(cron = "0 0 0,12 * * *")
-    public void updateCompanyDescriptionScheduler() {
+    public void updateCompanyDescriptionScheduler() throws InterruptedException {
+        System.out.println("All Company description_update(summary) start at " + LocalDateTime.now());
         companyService.updateCompanyDescription();
 
         // 업데이트 완료 로그 출력
-        System.out.println("All Company descriptions updated at " + LocalDateTime.now());
+        System.out.println("All Company description_update(summary) end at " + LocalDateTime.now());
     }
 }

@@ -23,6 +23,7 @@ public class GroqApiConfig {
     @Value("${groq.api-key}")
     private String groqApiKey;
 
+
     /**
      * groqModel:
      * Groq API 요청 시 사용할 모델 이름

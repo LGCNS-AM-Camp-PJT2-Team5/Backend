@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RecruitmentResponseDto {
     private Long id;
-    private Long companyId;
     private String title;
     private String requirements;
     private String description;

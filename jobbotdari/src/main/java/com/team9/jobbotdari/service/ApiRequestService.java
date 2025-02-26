@@ -157,7 +157,7 @@ public class ApiRequestService {
                     String companyName = jobNode.path("company").path("detail").path("name").asText();
                     String title = jobNode.path("position").path("title").asText();
                     String requirements = jobNode.path("position").path("job-type").path("name").asText();
-                    String description = jobNode.path("position").path("industry").path("name").asText();
+                    String description = jobNode.path("url").asText();
                     String deadlineString = jobNode.path("expiration-date").asText();
 
                     // 3. 마감일 문자열을 LocalDateTime으로 변환
