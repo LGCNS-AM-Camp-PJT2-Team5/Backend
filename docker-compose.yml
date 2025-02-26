@@ -14,8 +14,8 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
-      retries: 5
-      start_period: 10s
+      retries: 10
+      start_period: 30s
 
   config-server:
     image: jihoonyc/configserver:latest
@@ -30,7 +30,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
       interval: 5s
-      retries: 5
+      retries: 10
       start_period: 30s
 
   eureka-server:
@@ -43,11 +43,11 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8070/actuator/health"]
-      interval: 5s
-      retries: 5
-      start_period: 30s
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8070/actuator/health"]
+#      interval: 5s
+#      retries: 10
+#      start_period: 60s
 
   gateway-server:
     image: jihoonyc/gatewayserver:latest
@@ -55,15 +55,14 @@ services:
     ports:
       - "8072:8072"
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8072/actuator/health"]
-      interval: 5s
-      retries: 5
-      start_period: 30s
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8072/actuator/health"]
+#      interval: 5s
+#      retries: 10
+#      start_period: 45s
 
   jobbotdari:
     image: jihoonyc/jobbotdari:latest
@@ -71,17 +70,18 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      mysql:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
+      - mysql
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 5s
-      retries: 5
-      start_period: 30s
+    environment:
+      - SPRING_APPLICATION_NAME=jobbotdari
+      - SPRING_PROFILES_ACTIVE=default
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+#      interval: 5s
+#      retries: 10
+#      start_period: 45s
 
   jobbotdari-user:
     image: jihoonyc/jobbotdari_user:latest
@@ -89,21 +89,17 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      jobbotdari:
-        condition: service_healthy
+      - eureka-server
+      - mysql
     networks:
       - app-network
     volumes:
       - jobbotdari-user-uploads:/app/uploads
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 5s
-      retries: 5
-      start_period: 30s
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+#      interval: 5s
+#      retries: 10
+#      start_period: 45s
 
 networks:
   app-network:
