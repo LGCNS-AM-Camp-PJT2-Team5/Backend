@@ -51,9 +51,7 @@ jobs:
                        --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
                        -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
 
-          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:${{ github.sha }}
 
       - name: Build and Push Application Images
         env:
@@ -82,7 +80,5 @@ jobs:
                          --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
                          -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
 
-            docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:${{ github.sha }}
             docker push $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:${{ github.sha }}
           done

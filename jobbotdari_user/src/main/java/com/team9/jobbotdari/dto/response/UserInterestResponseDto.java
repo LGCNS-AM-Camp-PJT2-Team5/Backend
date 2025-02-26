@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class UserInterestResponseDto {
    private Long userId;
-   private List<CompanyDto> companies;
+   private List<Long> companyIds;
 }
