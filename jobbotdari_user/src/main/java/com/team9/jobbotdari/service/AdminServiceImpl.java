@@ -5,19 +5,25 @@ import com.team9.jobbotdari.dto.response.BaseResponseDto;
 import com.team9.jobbotdari.dto.response.LogListResponseDto;
 import com.team9.jobbotdari.dto.response.UserListResponseDto;
 import com.team9.jobbotdari.entity.Log;
+import com.team9.jobbotdari.entity.User;
 import com.team9.jobbotdari.exception.user.UserNotFoundException;
 import com.team9.jobbotdari.repository.LogRepository;
 import com.team9.jobbotdari.repository.UserRepository;
+import com.team9.jobbotdari.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
@@ -30,7 +36,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<UserListResponseDto> getUserList() {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            throw new UserNotFoundException();
+        }
+
         return userRepository.findAll().stream()
+                .filter(user -> !currentUser.getId().equals(user.getId()))
                 .map(user -> modelMapper.map(user, UserListResponseDto.class))
                 .collect(Collectors.toList());
     }
@@ -64,5 +76,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public BaseResponseDto addCompany(AddCompanyRequestDto addCompanyRequestDto) {
        return jobbotariFeignClient.addCompany(addCompanyRequestDto);
+    }
+
+    private User getCurrentUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+                return ((CustomUserDetails) authentication.getPrincipal()).getUser();
+            }
+        } catch (Exception e) {
+            log.warn("User 추출 실패: {}", e.getMessage());
+        }
+        return null;
     }
 }
