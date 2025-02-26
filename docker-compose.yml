@@ -90,6 +90,7 @@ services:
       - gateway-server
     networks:
       - app-network
+    command: [ "npm", "run", "dev", "--", "--host" ]
 
 networks:
   app-network:
