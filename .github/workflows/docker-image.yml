@@ -60,6 +60,9 @@ jobs:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
           GIT_PW: ${{ secrets.GIT_PW }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
           SERVICES=("configserver" "eurekaserver" "gatewayserver" "jobbotdari" "jobbotdari_user")
 
@@ -74,6 +77,9 @@ jobs:
 
             docker build --build-arg GIT_USERNAME=$GIT_USERNAME \
                          --build-arg GIT_PW=$GIT_PW \
+                         --build-arg MYSQL_DATABASE=$MYSQL_DATABASE \
+                         --build-arg MYSQL_USER=$MYSQL_USER \
+                         --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
                          -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
 
             docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:${{ github.sha }}
