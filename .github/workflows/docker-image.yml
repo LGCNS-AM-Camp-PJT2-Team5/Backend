@@ -29,29 +29,10 @@ jobs:
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}"
           echo "MYSQL_USER=${{ secrets.MYSQL_USER }}"
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}"
-
-      - name: Build and Push MySQL Image
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: |
-          IMAGE_NAME="$DOCKER_HUB_USERNAME/mysql"
-          IMAGE_TAG="latest"
-          CONTEXT="./mysql"
-          DOCKERFILE="$CONTEXT/Dockerfile"
-
-          echo "Building and pushing $IMAGE_NAME:$IMAGE_TAG"
-
-          docker build --build-arg MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
-                       --build-arg MYSQL_DATABASE=$MYSQL_DATABASE \
-                       --build-arg MYSQL_USER=$MYSQL_USER \
-                       --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
-                       -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
-
-          docker push $IMAGE_NAME:$IMAGE_TAG
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+          echo "AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}"
 
       - name: Build and Push Application Images
         env:
@@ -61,6 +42,10 @@ jobs:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}"
         run: |
           SERVICES=("configserver" "eurekaserver" "gatewayserver" "jobbotdari" "jobbotdari_user")
 
@@ -78,6 +63,10 @@ jobs:
                          --build-arg MYSQL_DATABASE=$MYSQL_DATABASE \
                          --build-arg MYSQL_USER=$MYSQL_USER \
                          --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
+                         --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                         --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                         --build-arg AWS_REGION=$AWS_REGION \
+                         --build-arg AWS_S3_BUCKET_NAME=$AWS_S3_BUCKET_NAME \
                          -t $IMAGE_NAME:$IMAGE_TAG -f $DOCKERFILE $CONTEXT
 
             docker push $IMAGE_NAME:$IMAGE_TAG

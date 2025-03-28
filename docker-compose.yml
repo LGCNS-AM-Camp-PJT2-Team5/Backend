@@ -66,11 +66,15 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_USER}:3306/${MYSQL_DATABASE_USER}?serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
     volumes:
       - jobbotdari-user-uploads:/app/uploads
 
   frontend:
-    image: jihoonyc/frontend:latest
+    image: honey0928/frontend:latest
     platform: linux/amd64
     container_name: frontend
     ports:
