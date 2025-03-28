@@ -1,5 +1,7 @@
 package com.team9.jobbotdari.service;
 
+
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.team9.jobbotdari.entity.File;
 import com.team9.jobbotdari.entity.User;
@@ -9,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -24,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileService {
     private final FileRepository fileRepository;
-    private final AmazonS3 amazonS3;
+    private final AmazonS3Client amazonS3;
 
     @Value("${aws.s3.bucket.name}")
     private String bucketName;
