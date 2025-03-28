@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/LGCNS-AM-Camp-PJT1-Team9/resources.git
+          uri: https://github.com/LGCNS-AM-Camp-PJT2-Team5/resources.git
           search-paths:
             - eureka-server
             - gateway-server
