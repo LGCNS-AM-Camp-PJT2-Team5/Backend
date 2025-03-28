@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -41,7 +42,7 @@ public class ProfileService {
         File file = fileRepository.findTopByUserIdOrderByCreatedAtDesc(user.getId()).orElse(null);
 
         // S3에서 가져온 파일 URL 생성
-        String fileUrl = (file != null) ? fileAccessUrl + file.getFilename() : null;
+        String fileUrl = Objects.requireNonNull(file).getFilePath();
 
         // 사용자 정보와 함께 파일 URL 반환
         return new ProfileResponseDto(
