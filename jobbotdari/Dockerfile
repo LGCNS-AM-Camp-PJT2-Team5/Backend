@@ -6,16 +6,17 @@ RUN gradle build --no-daemon -x test
 
 FROM openjdk:21-jdk-slim
 
-# MySQL 환경 변수
+# MySQL (RDS) 환경 변수
+ARG MYSQL_HOST
 ARG MYSQL_DATABASE
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
 
-ENV SPRING_DATASOURCE_URL="jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?serverTimezone=UTC"
+ENV SPRING_DATASOURCE_URL="jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATABASE}?serverTimezone=UTC"
 ENV SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
 ENV SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 
 VOLUME /tmp
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar","--spring.profiles.active=prod"]
