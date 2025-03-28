@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   config-server:
-    build:
-      context: ./configserver
-      dockerfile: Dockerfile
+    image: honey0928/configserver:latest
+    platform: linux/amd64
     container_name: config-server
     networks:
       - app-network
@@ -18,9 +17,8 @@ services:
       - GIT_PW=${GIT_PW}
 
   eureka-server:
-    build:
-      context: ./eurekaserver
-      dockerfile: Dockerfile
+    image: honey0928/eurekaserver:latest
+    platform: linux/amd64
     container_name: eureka-server
     depends_on:
       config-server:
@@ -29,9 +27,8 @@ services:
       - app-network
 
   gateway-server:
-    build:
-      context: ./gatewayserver
-      dockerfile: Dockerfile
+    image: honey0928/gatewayserver:latest
+    platform: linux/amd64
     container_name: gateway-server
     ports:
       - "8072:8072"
@@ -41,9 +38,8 @@ services:
       - app-network
 
   jobbotdari:
-    build:
-      context: ./jobbotdari
-      dockerfile: Dockerfile
+    image: honey0928/jobbotdari:latest
+    platform: linux/amd64
     container_name: jobbotdari
     depends_on:
       - eureka-server
@@ -57,9 +53,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 
   jobbotdari-user:
-    build:
-      context: ./jobbotdari_user
-      dockerfile: Dockerfile
+    image: honey0928/jobbotdari_user:latest
+    platform: linux/amd64
     container_name: jobbotdari-user
     depends_on:
       - eureka-server
@@ -76,6 +71,7 @@ services:
 
   frontend:
     image: jihoonyc/frontend:latest
+    platform: linux/amd64
     container_name: frontend
     ports:
       - "5173:5173"
