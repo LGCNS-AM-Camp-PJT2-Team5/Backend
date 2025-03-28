@@ -1,35 +1,20 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: honey0928/mysql:latest
-    platform: linux/amd64
-    container_name: mysql
-    restart: always
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      retries: 10
-      start_period: 30s
-
   config-server:
     image: honey0928/configserver:latest
     platform: linux/amd64
     container_name: config-server
     networks:
       - app-network
-    depends_on:
-      mysql:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
       interval: 5s
       retries: 10
       start_period: 30s
+    environment:
+      - GIT_USERNAME=${GIT_USERNAME}
+      - GIT_PW=${GIT_PW}
 
   eureka-server:
     image: honey0928/eurekaserver:latest
@@ -58,12 +43,14 @@ services:
     container_name: jobbotdari
     depends_on:
       - eureka-server
-      - mysql
     networks:
       - app-network
     environment:
       - SPRING_APPLICATION_NAME=jobbotdari
-      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_COMPANY}:3306/${MYSQL_DATABASE_COMPANY}?serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 
   jobbotdari-user:
     image: honey0928/jobbotdari_user:latest
@@ -71,9 +58,14 @@ services:
     container_name: jobbotdari-user
     depends_on:
       - eureka-server
-      - mysql
     networks:
       - app-network
+    environment:
+      - SPRING_APPLICATION_NAME=jobbotdari-user
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_USER}:3306/${MYSQL_DATABASE_USER}?serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - jobbotdari-user-uploads:/app/uploads
 
@@ -94,6 +86,4 @@ networks:
     driver: bridge
 
 volumes:
-  mysql-data:
   jobbotdari-user-uploads:
-
