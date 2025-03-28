@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: jihoonyc/mysql:latest
+    image: honey0928/mysql:latest
     container_name: mysql
     restart: always
     volumes:
@@ -16,7 +16,7 @@ services:
       start_period: 30s
 
   config-server:
-    image: jihoonyc/configserver:latest
+    image: honey0928/configserver:latest
     container_name: config-server
     networks:
       - app-network
@@ -30,7 +30,7 @@ services:
       start_period: 30s
 
   eureka-server:
-    image: jihoonyc/eurekaserver:latest
+    image: honey0928/eurekaserver:latest
     container_name: eureka-server
     depends_on:
       config-server:
@@ -39,7 +39,7 @@ services:
       - app-network
 
   gateway-server:
-    image: jihoonyc/gatewayserver:latest
+    image: honey0928/gatewayserver:latest
     container_name: gateway-server
     ports:
       - "8072:8072"
@@ -49,7 +49,7 @@ services:
       - app-network
 
   jobbotdari:
-    image: jihoonyc/jobbotdari:latest
+    image: honey0928/jobbotdari:latest
     container_name: jobbotdari
     depends_on:
       - eureka-server
@@ -61,7 +61,7 @@ services:
       - SPRING_PROFILES_ACTIVE=default
 
   jobbotdari-user:
-    image: jihoonyc/jobbotdari_user:latest
+    image: honey0928/jobbotdari_user:latest
     container_name: jobbotdari-user
     depends_on:
       - eureka-server
@@ -72,7 +72,7 @@ services:
       - jobbotdari-user-uploads:/app/uploads
 
   frontend:
-    image: jihoonyc/frontend:latest
+    image: honey0928/frontend:latest
     container_name: frontend
     ports:
       - "5173:5173"
