@@ -15,6 +15,10 @@ services:
     environment:
       - GIT_USERNAME=${GIT_USERNAME}
       - GIT_PW=${GIT_PW}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   eureka-server:
     image: honey0928/eurekaserver:latest
