@@ -49,8 +49,8 @@ public class ProfileController {
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
         // 프로필 업데이트 후 파일 URL 반환
-        String fileUrl = profileService.updateProfile(userDetails, requestDto, file);
-        return ResponseEntity.ok().body(Map.of("code", 200, "data", fileUrl));
+        profileService.updateProfile(userDetails, requestDto, file);
+        return ResponseEntity.ok().body(Map.of("code", 200));
     }
 
     // S3에서 파일 제공 (파일 다운로드)

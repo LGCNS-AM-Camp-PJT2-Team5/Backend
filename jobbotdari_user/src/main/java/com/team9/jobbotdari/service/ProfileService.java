@@ -54,7 +54,7 @@ public class ProfileService {
     }
 
     @Transactional
-    public String updateProfile(CustomUserDetails userDetails, ProfileUpdateRequestDto requestDto, MultipartFile file) {
+    public void updateProfile(CustomUserDetails userDetails, ProfileUpdateRequestDto requestDto, MultipartFile file) {
         // 현재 로그인된 사용자 조회
         User user = userRepository.findById(userDetails.getUser().getId())
                 .orElseThrow(UserNotFoundException::new);
@@ -75,27 +75,6 @@ public class ProfileService {
             }
         }
 
-        // 파일 변경 처리 (S3 업로드)
-        String fileUrl = null;
-        if (file != null && !file.isEmpty()) {
-            // 기존 파일을 삭제 (필요한 경우)
-            File oldFile = fileRepository.findTopByUserIdOrderByCreatedAtDesc(user.getId()).orElse(null);
-            if (oldFile != null) {
-                fileService.deleteFileFromS3(oldFile); // 기존 파일을 S3에서 삭제
-            }
-
-            // 새로운 파일을 S3에 업로드하고 URL 반환
-            try {
-                fileUrl = fileService.uploadFileToS3(file, user);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        // 사용자 정보 저장
-        userRepository.save(user);
-
-        // 업로드된 파일 URL 반환
-        return fileUrl;
+        fileService.updateFile(file, user);
     }
 }
