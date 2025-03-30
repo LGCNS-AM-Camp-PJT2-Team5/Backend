@@ -59,7 +59,11 @@ public class FileService {
 
             // 기존 파일 삭제 (사용자가 프로필을 변경할 때)
             fileRepository.findTopByUserIdOrderByCreatedAtDesc(user.getId())
-                    .ifPresent(existingFile -> fileRepository.delete(existingFile));
+                    .ifPresent(existingFile -> {
+                        fileRepository.delete(existingFile);
+                        String filename = existingFile.getFilePath().substring(existingFile.getFilePath().lastIndexOf('/') + 1);
+                        deleteFileFromS3(filename);
+                    });
 
             // S3 URL 생성
             String filePath = amazonS3.getUrl(bucketName, fileName).toString();
@@ -96,6 +100,10 @@ public class FileService {
         }
     }
 
+    private void deleteFileFromS3(String fileName) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+    }
+
     // 파일 확장자 추출 메서드
     private String getFileExtension(String filename) {
         int dotIndex = filename.lastIndexOf(".");
@@ -114,25 +122,4 @@ public class FileService {
             throw new RuntimeException("파일 삭제 중 오류 발생", e);
         }
     }
-
-    public String uploadFileToS3(MultipartFile multipartFile, User user) throws IOException {
-        // 파일 이름을 고유하게 생성하여 중복 방지
-        String fileName = generateUniqueFileName(multipartFile.getOriginalFilename());
-
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(multipartFile.getContentType());
-            metadata.setContentLength(multipartFile.getSize());
-
-            // S3에 파일 업로드
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
-
-            // 업로드한 파일의 URL 반환
-            return amazonS3.getUrl(bucketName, fileName).toString();
-        } catch (IOException e) {
-            log.error("파일 업로드 중 오류 발생: {}", e.getMessage());
-            throw new IOException("파일 업로드 중 오류 발생", e);
-        }
-    }
-
 }
