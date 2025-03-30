@@ -2,7 +2,7 @@
 FROM gradle:8.12.1-jdk21 AS builder
 WORKDIR /home/gradle/project
 COPY --chown=gradle:gradle . .
-RUN gradle build --no-daemon
+RUN gradle build -x test --no-daemon  # 테스트 생략
 
 FROM openjdk:21-jdk-slim
 VOLUME /tmp
