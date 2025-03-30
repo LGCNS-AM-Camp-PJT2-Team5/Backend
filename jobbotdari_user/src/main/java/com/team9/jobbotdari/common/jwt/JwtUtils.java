@@ -58,39 +58,39 @@ public class JwtUtils {
         return jwtToken;
     }
 
-    private Claims getAllClaimsFromToken(String token) {
-        Jws<Claims> jwt = Jwts.parser()
-                .verifyWith(this.hmacKey)
-                .build()
-                .parseSignedClaims(token);
-        return jwt.getPayload();
-    }
+//    private Claims getAllClaimsFromToken(String token) {
+//        Jws<Claims> jwt = Jwts.parser()
+//                .verifyWith(this.hmacKey)
+//                .build()
+//                .parseSignedClaims(token);
+//        return jwt.getPayload();
+//    }
+//
+//    private Date getExpirationDateFromToken(String token) {
+//        Claims claims = getAllClaimsFromToken(token);
+//        return claims.getExpiration();
+//    }
+//
+//    private boolean isTokenExpired(String token) {
+//        Date expiration = getExpirationDateFromToken(token);
+//        return expiration.before(new Date());
+//    }
+//
+//    public String getSubjectFromToken(String token) {
+//        Claims claims = getAllClaimsFromToken(token);
+//        return claims.getSubject();
+//    }
 
-    private Date getExpirationDateFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claims.getExpiration();
-    }
-
-    private boolean isTokenExpired(String token) {
-        Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    public String getSubjectFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claims.getSubject();
-    }
-
-    public boolean validateToken(String token, User user) {
-        // 토큰 유효기간 체크
-        if (isTokenExpired(token)) {
-            return false;
-        }
-
-        // 토큰 내용을 검증
-        String subject = getSubjectFromToken(token);
-        String username = user.getUsername();
-
-        return subject != null && username != null && subject.equals(username);
-    }
+//    public boolean validateToken(String token, User user) {
+//        // 토큰 유효기간 체크
+//        if (isTokenExpired(token)) {
+//            return false;
+//        }
+//
+//        // 토큰 내용을 검증
+//        String subject = getSubjectFromToken(token);
+//        String username = user.getUsername();
+//
+//        return subject != null && username != null && subject.equals(username);
+//    }
 }
