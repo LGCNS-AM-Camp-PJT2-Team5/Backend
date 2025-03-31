@@ -47,6 +47,11 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Sleuth
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	// Zipkin
+	implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+
 	// RabbitMQ
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'

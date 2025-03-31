@@ -49,6 +49,11 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+	// Sleuth
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	// Zipkin
+	implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+
 	// for RSS
 	implementation 'com.rometools:rome:2.1.0'
 
