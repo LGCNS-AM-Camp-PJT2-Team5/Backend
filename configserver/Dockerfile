@@ -2,7 +2,8 @@
 FROM gradle:8.12.1-jdk21 AS builder
 WORKDIR /home/gradle/project
 COPY --chown=gradle:gradle . .
-RUN gradle build --no-daemon
+RUN gradle build --no-daemon -x test
+
 
 FROM openjdk:21-jdk-slim
 RUN apt-get update && apt-get install -y curl

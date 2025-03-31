@@ -1,8 +1,11 @@
+# 250329 11:39 update
 version: '3.8'
 
 services:
   config-server:
-    image: honey0928/configserver:latest
+    build:
+      context: ./configserver
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: config-server
     networks:
@@ -21,7 +24,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   eureka-server:
-    image: honey0928/eurekaserver:latest
+    build:
+      context: ./eurekaserver
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: eureka-server
     depends_on:
@@ -31,7 +36,9 @@ services:
       - app-network
 
   gateway-server:
-    image: honey0928/gatewayserver:latest
+    build:
+      context: ./gatewayserver
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: gateway-server
     ports:
@@ -47,7 +54,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari:
-    image: honey0928/jobbotdari:latest
+    build:
+      context: ./jobbotdari
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: jobbotdari
     depends_on:
@@ -66,7 +75,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari-user:
-    image: honey0928/jobbotdari_user:latest
+    build:
+      context: ./jobbotdari_user
+      dockerfile: Dockerfile
     platform: linux/amd64
     container_name: jobbotdari-user
     depends_on:
