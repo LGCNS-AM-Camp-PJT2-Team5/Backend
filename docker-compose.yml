@@ -2,8 +2,9 @@ version: '3.8'
 
 services:
   config-server:
-    image: honey0928/configserver:latest
-    platform: linux/amd64
+    build:
+      context: ./configserver
+      dockerfile: Dockerfile
     container_name: config-server
     networks:
       - app-network
@@ -21,8 +22,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   eureka-server:
-    image: honey0928/eurekaserver:latest
-    platform: linux/amd64
+    build:
+      context: ./eurekaserver
+      dockerfile: Dockerfile
     container_name: eureka-server
     depends_on:
       config-server:
@@ -31,8 +33,9 @@ services:
       - app-network
 
   gateway-server:
-    image: honey0928/gatewayserver:latest
-    platform: linux/amd64
+    build:
+      context: ./gatewayserver
+      dockerfile: Dockerfile
     container_name: gateway-server
     ports:
       - "8072:8072"
@@ -47,8 +50,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari:
-    image: honey0928/jobbotdari:latest
-    platform: linux/amd64
+    build:
+      context: ./jobbotdari
+      dockerfile: Dockerfile
     container_name: jobbotdari
     depends_on:
       - eureka-server
@@ -66,8 +70,9 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari-user:
-    image: honey0928/jobbotdari_user:latest
-    platform: linux/amd64
+    build:
+      context: ./jobbotdari_user
+      dockerfile: Dockerfile
     container_name: jobbotdari-user
     depends_on:
       - eureka-server
@@ -92,7 +97,6 @@ services:
 
   frontend:
     image: honey0928/frontend:latest
-    platform: linux/amd64
     container_name: frontend
     ports:
       - "5173:5173"
