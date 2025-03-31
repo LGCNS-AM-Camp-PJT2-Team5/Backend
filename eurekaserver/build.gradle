@@ -27,6 +27,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.4.3'
+
+	// RabbitMQ
+	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 dependencyManagement {
