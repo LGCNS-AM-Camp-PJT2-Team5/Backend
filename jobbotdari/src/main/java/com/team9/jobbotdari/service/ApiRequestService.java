@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team9.jobbotdari.config.GroqApiConfig;
 import com.team9.jobbotdari.config.SaraminApiConfig;
 import com.team9.jobbotdari.dto.request.RecruitmentRequestDto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,6 +45,8 @@ public class ApiRequestService {
      * @param newsContent 뉴스 콘텐츠 (기사 링크 또는 기사 요약)
      * @return Groq API 응답에서 추출한 요약 내용이 포함된 Map 객체
      */
+    @Retry(name = "apiRequestService", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "apiRequestService", fallbackMethod = "fallbackMethod")
     public Map<String, Object> getNewsSummary(String newsContent) {
         // 1. 시스템 프롬프트 템플릿에 newsContent를 삽입하여 최종 메시지를 생성
         String message = String.format(groqApiConfig.getSystemPromptTemplate(), newsContent);
@@ -114,6 +118,8 @@ public class ApiRequestService {
      *
      * @return 채용 공고 목록을 RecruitmentRequestDto 리스트로 반환
      */
+    @Retry(name = "apiRequestService", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "apiRequestService", fallbackMethod = "fallbackMethod")
     public List<RecruitmentRequestDto> getSaraminRecruitmentsInfo() {
         Map<String, Object> queryParams = saraminApiConfig.getSaraminQueryParams();
 
@@ -176,5 +182,9 @@ public class ApiRequestService {
         }
 
         return result;
+    }
+
+    public String fallbackMethod(Exception e) {
+        return "Fallback response: 외부 API를 사용할 수 없습니다.";
     }
 }

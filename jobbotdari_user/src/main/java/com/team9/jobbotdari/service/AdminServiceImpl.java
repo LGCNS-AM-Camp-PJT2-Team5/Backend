@@ -10,6 +10,8 @@ import com.team9.jobbotdari.exception.user.UserNotFoundException;
 import com.team9.jobbotdari.repository.LogRepository;
 import com.team9.jobbotdari.repository.UserRepository;
 import com.team9.jobbotdari.security.CustomUserDetails;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -85,9 +87,16 @@ public class AdminServiceImpl implements AdminService {
                 .collect(Collectors.toList());
     }
 
+
+    @Retry(name = "adminService", fallbackMethod = "fallbackMethod")
+    @CircuitBreaker(name = "adminService", fallbackMethod = "fallbackMethod")
     @Override
     public BaseResponseDto addCompany(AddCompanyRequestDto addCompanyRequestDto) {
        return jobbotariFeignClient.addCompany(addCompanyRequestDto);
+    }
+
+    public String fallbackMethod() {
+        return "Fallback response: Company API를 사용할 수 없습니다.";
     }
 
     private User getCurrentUser() {
