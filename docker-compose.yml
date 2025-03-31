@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   config-server:
-    build:
-      context: ./configserver
-      dockerfile: Dockerfile
+    image: honey0928/configserver:latest
+    platform: linux/amd64
     container_name: config-server
     networks:
       - app-network
@@ -18,9 +17,8 @@ services:
       - GIT_PW=${GIT_PW}
 
   eureka-server:
-    build:
-      context: ./eurekaserver
-      dockerfile: Dockerfile
+    image: honey0928/eurekaserver:latest
+    platform: linux/amd64
     container_name: eureka-server
     depends_on:
       config-server:
@@ -29,9 +27,8 @@ services:
       - app-network
 
   gateway-server:
-    build:
-      context: ./gatewayserver
-      dockerfile: Dockerfile
+    image: honey0928/gatewayserver:latest
+    platform: linux/amd64
     container_name: gateway-server
     ports:
       - "8072:8072"
@@ -41,9 +38,8 @@ services:
       - app-network
 
   jobbotdari:
-    build:
-      context: ./jobbotdari
-      dockerfile: Dockerfile
+    image: honey0928/jobbotdari:latest
+    platform: linux/amd64
     container_name: jobbotdari
     depends_on:
       - eureka-server
@@ -57,9 +53,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 
   jobbotdari-user:
-    build:
-      context: ./jobbotdari_user
-      dockerfile: Dockerfile
+    image: honey0928/jobbotdari_user:latest
+    platform: linux/amd64
     container_name: jobbotdari-user
     depends_on:
       - eureka-server
@@ -71,11 +66,16 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_USER}:3306/${MYSQL_DATABASE_USER}?serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
     volumes:
       - jobbotdari-user-uploads:/app/uploads
 
   frontend:
-    image: jihoonyc/frontend:latest
+    image: honey0928/frontend:latest
+    platform: linux/amd64
     container_name: frontend
     ports:
       - "5173:5173"
