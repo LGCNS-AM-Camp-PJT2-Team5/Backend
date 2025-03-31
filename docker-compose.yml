@@ -32,8 +32,12 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
       - app-network
+
 
   gateway-server:
     build:
