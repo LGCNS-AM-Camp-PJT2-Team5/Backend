@@ -90,17 +90,6 @@ services:
     volumes:
       - jobbotdari-user-uploads:/app/uploads
 
-#  frontend:
-#    image: honey0928/frontend:latest
-#    container_name: frontend
-#    ports:
-#      - "5173:5173"
-#    depends_on:
-#      - gateway-server
-#    networks:
-#      - app-network
-#    command: [ "npm", "run", "dev", "--", "--host" ]
-
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -112,6 +101,15 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
       - app-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - app-network
+
 
 networks:
   app-network:
