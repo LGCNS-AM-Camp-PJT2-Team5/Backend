@@ -6,6 +6,8 @@ services:
     container_name: config-server
     networks:
       - app-network
+    ports:
+      - "8071:8071"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
       interval: 5s
@@ -15,6 +17,8 @@ services:
   eureka-server:
     image: honey0928/eurekaserver:latest
     container_name: eureka-server
+    ports:
+      - "8070:8070"
     depends_on:
       config-server:
         condition: service_healthy
@@ -53,7 +57,7 @@ services:
       - jobbotdari-user-uploads:/app/uploads
 
   rabbitmq:
-    image: honey0928/rabbitmq
+    image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
       - "5672:5672"
