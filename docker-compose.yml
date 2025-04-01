@@ -11,13 +11,6 @@ services:
       interval: 5s
       retries: 10
       start_period: 30s
-    environment:
-      - GIT_USERNAME=${GIT_USERNAME}
-      - GIT_PW=${GIT_PW}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   eureka-server:
     image: honey0928/eurekaserver:latest
@@ -25,11 +18,6 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-    environment:
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     networks:
       - app-network
 
@@ -42,11 +30,6 @@ services:
       - eureka-server
     networks:
       - app-network
-    environment:
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari:
     image: honey0928/jobbotdari:latest
@@ -55,16 +38,6 @@ services:
       - eureka-server
     networks:
       - app-network
-    environment:
-      - SPRING_APPLICATION_NAME=jobbotdari
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_COMPANY}:3306/${MYSQL_DATABASE_COMPANY}?serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
 
   jobbotdari-user:
     image: honey0928/jobbotdari_user:latest
@@ -76,29 +49,15 @@ services:
     environment:
       - SPRING_APPLICATION_NAME=jobbotdari-user
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST_USER}:3306/${MYSQL_DATABASE_USER}?serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     volumes:
       - jobbotdari-user-uploads:/app/uploads
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: honey0928/rabbitmq
     container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
       - app-network
 
@@ -109,7 +68,6 @@ services:
       - "9411:9411"
     networks:
       - app-network
-
 
 networks:
   app-network:
